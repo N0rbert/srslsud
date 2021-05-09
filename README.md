@@ -33,7 +33,7 @@ Please note that JSON files have the following names:
 
 'Load' operation for Snap, Flatpak and Ubuntu Make are almost automatic. They require user to enter password only on package installation.
 
-'Load' operation for APT is interactive. The Python script generates Bash script named *apt.sh*. User should manually review this script and the run it by `sudo bash ./srslsud.py` and keep an eye on it. Some issues may occur here because of dependencies of something similar. It is recommended to run the load operation on fully upgraded system without PPAs and third-party repositories added. Current version of script support the following repositories: Launchpad PPAs, OpenSuSe Build Service, Oracle VirtualBox, Google Chrome, UbuntuZilla on SourceForge and Yandex Disk.
+'Load' operation for APT is interactive. The Python script generates Bash script named *apt.sh*. User should manually review this script and the run it by `sudo bash ./apt.sh` and keep an eye on it. Some issues may occur here because of dependencies of something similar. It is recommended to run the load operation on fully upgraded system without PPAs and third-party repositories added. Current version of script support the following repositories: Launchpad PPAs, OpenSuSe Build Service, Oracle VirtualBox, Google Chrome, UbuntuZilla on SourceForge and Yandex Disk.
 
 Quick start:
 
