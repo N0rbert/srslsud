@@ -698,7 +698,10 @@ def apt_operations(operation='save'):
 
             tp_info = dict()
             tp_info['name'] = p['name']
-            tp_info['repo'] = p['deb-url']
+            try:  # avoid missed 'deb-url' key case
+                tp_info['repo'] = p['deb-url']
+            except KeyError:
+                tp_info['repo'] = []
             deb_pkg_list['thirdparty_packages'].append(tp_info)
 
             for k in apt_keys:
@@ -760,7 +763,8 @@ def apt_operations(operation='save'):
                     append_command_to_script(apt_script_file, "dpkg --add-architecture i386")
 
                     for c in extract_unique_elements(deb_pkg_list['official_packages'], 'component'):
-                        append_command_to_script(apt_script_file, "add-apt-repository {}".format(c))
+                        if c:
+                            append_command_to_script(apt_script_file, "add-apt-repository {}".format(c))
 
                     append_command_to_script(apt_script_file, "apt-get update")
 
@@ -773,7 +777,8 @@ def apt_operations(operation='save'):
 
                     # adding command to installation script for PPAs
                     for ppa in extract_unique_elements(deb_pkg_list['launchpad_ppa_packages'], 'repo'):
-                        append_command_to_script(apt_script_file, "add-apt-repository {}".format(ppa))
+                        if ppa:
+                            append_command_to_script(apt_script_file, "add-apt-repository {}".format(ppa))
 
                     append_command_to_script(apt_script_file, "apt-get update")
 
@@ -786,10 +791,12 @@ def apt_operations(operation='save'):
 
                     # adding command to installation script for third-party deb-repositories
                     for tpk in extract_unique_elements(deb_pkg_list['thirdparty_keys'], 'key'):
-                        append_command_to_script(apt_script_file, "apt-key adv --keyserver keyserver.ubuntu.com --recv {}".format(tpk['key']))
+                        if tpk:
+                            append_command_to_script(apt_script_file, "apt-key adv --keyserver keyserver.ubuntu.com --recv {}".format(tpk['key']))
 
                     for tpr in extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'repo'):
-                        append_command_to_script(apt_script_file, "add-apt-repository '{}'".format(tpr))
+                        if tpr:
+                            append_command_to_script(apt_script_file, "add-apt-repository '{}'".format(tpr))
 
                     append_command_to_script(apt_script_file, "apt-get update")
 
