@@ -17,7 +17,7 @@ To enable all the features user needs to install the dependencies using command 
 sudo apt-get install python3 python3-gi python3-apt software-properties-common python3-jsonpickle
 
 # additional for Snap, Flatpak
-sudo apt-get install snapd flatpak ubuntu-make gir1.2-snapd-1 gir1.2-flatpak-1.0
+sudo apt-get install snapd flatpak gir1.2-snapd-1 gir1.2-flatpak-1.0
 
 # additional for Ubuntu Make
 sudo apt-get install ubuntu-make
