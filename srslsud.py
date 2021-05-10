@@ -8,14 +8,33 @@ import sys
 import os
 import subprocess
 from urllib.parse import urlsplit
-import gi
-import apt
+import datetime
+
+try:
+    import gi
+except ImportError:
+    print("Error: please install 'python3-gi' deb-package.")
+    sys.exit()
+
+try:
+    import apt
+except ImportError:
+    print("Error: please install 'python3-apt' deb-package for APT support.")
+    sys.exit()
+
 import aptsources.distro
 from aptsources import sourceslist
-import datetime
 import apt_pkg
 
 print("This script will save or load software lists installed from various sources: Snap, Flatpak, Ubuntu Make and APT.")
+
+apt_ok = False
+if os.access('/usr/bin/add-apt-repository', os.X_OK):
+    apt_ok = True
+    print("Note: your system supports APT.")
+else:
+    print("Error: please install 'software-properties-common' deb-package for APT support.")
+    sys.exit()
 
 snap_ok = False
 if os.access('/usr/bin/snap', os.X_OK):
@@ -197,7 +216,7 @@ def snap_operations(operation='save'):
         else:
             print("Error: can't find any Snaps in the '{}' file.".format(snap_json_filename))
 
-    print("Finished")
+    print("Snap finished.")
 
 
 def flatpak_operations(operation='save'):
@@ -292,7 +311,7 @@ def flatpak_operations(operation='save'):
         else:
             print("Error: can't find any Flatpaks and their remotes in the '{}' file.".format(flatpak_json_filename))
 
-    print("Finished")
+    print("Flatpak finished.")
 
 
 def umake_operations(operation='save'):
@@ -353,7 +372,7 @@ def umake_operations(operation='save'):
         else:
             print("Error: can't find any application in the '{}' file.".format(umake_json_filename))
 
-    print("Finished")
+    print("Ubuntu Make finished.")
 
 
 # APT functions
@@ -788,7 +807,7 @@ def apt_operations(operation='save'):
         else:  # wrong distro and codename
             print("Error: JSON file was created for {} {}, but you are now using {} {}. This is not supported. Script will stop.".format(deb_pkg_list['distro'].codename, deb_pkg_list['distro'].id, distro.codename, distro.id))
 
-    print("Finished")
+    print("APT finished.")
 
 
 """
@@ -796,10 +815,6 @@ def apt_operations(operation='save'):
 """
 
 if __name__ == "__main__":
-    if (not flatpak_ok) and (not snap_ok):
-        print("Error: your system does not support neither Snap nor Flatpak. The program can't proceed. Please install at least one of the packages.")
-        sys.exit()
-
     if len(sys.argv) >= 2:
         op = sys.argv[1]
 
@@ -822,9 +837,11 @@ if __name__ == "__main__":
             if umake_ok:
                 umake_operations('load')
         elif op == 'apt_save':
-            apt_operations('save')
+            if apt_ok:
+                apt_operations('save')
         elif op == 'apt_load':
-            apt_operations('load')
+            if apt_ok:
+                apt_operations('load')
         elif op == 'all_save':
             if snap_ok:
                 snap_operations('save')
@@ -832,7 +849,8 @@ if __name__ == "__main__":
                 flatpak_operations('save')
             if umake_ok:
                 umake_operations('save')
-            apt_operations('save')
+            if apt_ok:
+                apt_operations('save')
         elif op == 'all_load':
             if snap_ok:
                 snap_operations('load')
@@ -840,7 +858,8 @@ if __name__ == "__main__":
                 flatpak_operations('load')
             if umake_ok:
                 umake_operations('load')
-            apt_operations('load')
+            if apt_ok:
+                apt_operations('load')
         else:
             print("Error: option '{}' is not supported.".format(op))
 
