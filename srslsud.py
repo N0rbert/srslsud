@@ -603,14 +603,14 @@ def apt_operations(operation='save'):
         for i in installed:
             pkg = apt_cache[i]
             o = pkg.installed.origins[0]
-            if o.origin == 'Ubuntu':
+            if o.origin == distro_name:
                 pkg_ubuntu.append([pkg.name, o])
-            if o.origin != "Ubuntu" and o.archive != 'now' and o.trusted and o.origin.startswith("LP-PPA"):
+            if o.origin != distro_name and o.archive != 'now' and o.trusted and o.origin.startswith("LP-PPA"):
                 # print(pkg)
                 # print("\t{}".format(o))
                 # print("- - -\n")
                 pkg_thirdparty_ppa.append([pkg.name, o])
-            if o.origin != "Ubuntu" and o.archive != 'now' and o.trusted and not o.origin.startswith("LP-PPA"):
+            if o.origin != distro_name and o.archive != 'now' and o.trusted and not o.origin.startswith("LP-PPA"):
                 # print(pkg)
                 # print("\t{}".format(o))
                 # print("- - -\n")
