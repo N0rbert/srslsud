@@ -792,7 +792,7 @@ def apt_operations(operation='save'):
                     # adding command to installation script for third-party deb-repositories
                     for tpk in extract_unique_elements(deb_pkg_list['thirdparty_keys'], 'key'):
                         if tpk:
-                            append_command_to_script(apt_script_file, "apt-key adv --keyserver keyserver.ubuntu.com --recv {}".format(tpk['key']))
+                            append_command_to_script(apt_script_file, "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv {}".format(tpk['key']))
 
                     for tpr in extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'repo'):
                         if tpr:
