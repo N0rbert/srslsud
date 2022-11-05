@@ -578,6 +578,12 @@ def apt_operations(operation='save'):
     elif isinstance(distro, aptsources.distro.DebianDistribution):
         distro_name = 'Debian'
         print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
+    elif distro.id == 'AstraLinuxCE':
+        distro_name = 'AstraLinux'
+        astra_nearest_ubuntu_version = 'bionic'
+        if distro.codename == 'orel':
+            astra_nearest_ubuntu_version = 'xenial'
+        print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
     else:
         print("Error: your distro '{}' is not supported!".format(distro))
 
@@ -778,7 +784,10 @@ def apt_operations(operation='save'):
                     # adding command to installation script for PPAs
                     for ppa in extract_unique_elements(deb_pkg_list['launchpad_ppa_packages'], 'repo'):
                         if ppa:
-                            append_command_to_script(apt_script_file, "add-apt-repository {}".format(ppa))
+                            if distro_name == 'AstraLinux':
+                                append_command_to_script(apt_script_file, "add-apt-repository '{}/ubuntu {} main'".format(ppa.replace("ppa:", "deb http://ppa.launchpad.net/"), astra_nearest_ubuntu_version))
+                            else:
+                                append_command_to_script(apt_script_file, "add-apt-repository {}".format(ppa))
 
                     append_command_to_script(apt_script_file, "apt-get update")
 
