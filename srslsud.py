@@ -495,6 +495,9 @@ def apt_remove_word_from_brackets_in_sources_list(st, wordtoremove):
     """
     ss = st.split("]")
 
+    debug_on and print("0 - before: {}".format(st))
+    debug_on and print("1 - split: {}".format(ss))
+
     if len(ss) == 2:
         sss = ss[0].split()
         for sb in sss:
@@ -507,6 +510,10 @@ def apt_remove_word_from_brackets_in_sources_list(st, wordtoremove):
             t = st.split()
             t[1] = "[" + t[1]
             st = ' '.join(t)
+
+        st = st.replace("] [", " ") # FIXME: hack for nodesource only
+
+    debug_on and print("2 - after replace: {}".format(st))
 
     return(st)
 
