@@ -578,14 +578,14 @@ def apt_operations(operation='save'):
     elif isinstance(distro, aptsources.distro.DebianDistribution):
         distro_name = 'Debian'
         print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
-    elif distro.id == 'AstraLinuxCE':
+    elif distro.id == 'AstraLinuxCE' or distro.id == 'AstraLinux':
         distro_name = 'AstraLinux'
         astra_nearest_ubuntu_version = 'bionic'
         if distro.codename == 'orel':
             astra_nearest_ubuntu_version = 'xenial'
         print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
     else:
-        print("Error: your distro '{}' is not supported!".format(distro))
+        print("Error: your distro '{}' is not supported!".format(distro.id))
 
     print("Will process deb-packaged applications using '{}' mode.".format(operation))
     if operation == 'save':
