@@ -584,6 +584,15 @@ def apt_operations(operation='save'):
         print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
     elif isinstance(distro, aptsources.distro.DebianDistribution):
         distro_name = 'Debian'
+        debian_nearest_ubuntu_version = 'jammy'
+        if distro.codename == 'stretch':
+            debian_nearest_ubuntu_version = 'xenial'
+        elif distro.codename == 'buster':
+            debian_nearest_ubuntu_version = 'bionic'
+        elif distro.codename == 'bullseye':
+            debian_nearest_ubuntu_version = 'focal'
+        elif distro.codename == 'bookworm':
+            debian_nearest_ubuntu_version = 'jammy'
         print("You are running {} {} ({}) distro.".format(distro_name, distro.release, distro.codename))
     elif distro.id == 'AstraLinuxCE' or distro.id == 'AstraLinux':
         distro_name = 'AstraLinux'
@@ -793,6 +802,8 @@ def apt_operations(operation='save'):
                         if ppa:
                             if distro_name == 'AstraLinux':
                                 append_command_to_script(apt_script_file, "add-apt-repository '{}/ubuntu {} main'".format(ppa.replace("ppa:", "deb http://ppa.launchpad.net/"), astra_nearest_ubuntu_version))
+                            elif distro_name == 'Debian':
+                                append_command_to_script(apt_script_file, "add-apt-repository '{}/ubuntu {} main'".format(ppa.replace("ppa:", "deb http://ppa.launchpad.net/"), debian_nearest_ubuntu_version))
                             else:
                                 append_command_to_script(apt_script_file, "add-apt-repository {}".format(ppa))
 
