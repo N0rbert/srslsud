@@ -793,6 +793,24 @@ def apt_operations(operation='save'):
                     off_pkgs = ' '.join(extract_unique_elements(deb_pkg_list['official_packages'], 'name'))
                     append_command_to_script(apt_script_file, "apt install {}".format(off_pkgs))
 
+                if deb_pkg_list['package_stats']['thirdparty'] > 0:
+                    print("\n\nThe file contains list of the following {} packages from third-party repositories:".format(deb_pkg_list['package_stats']['thirdparty']))
+                    print(apt_show_package_names_dict(deb_pkg_list['thirdparty_packages']))
+
+                    # adding command to installation script for third-party deb-repositories
+                    for tpk in extract_unique_elements(deb_pkg_list['thirdparty_keys'], 'key'):
+                        if tpk:
+                            append_command_to_script(apt_script_file, "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv {}".format(tpk['key']))
+
+                    for tpr in extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'repo'):
+                        if tpr:
+                            append_command_to_script(apt_script_file, "add-apt-repository '{}'".format(tpr))
+
+                    append_command_to_script(apt_script_file, "apt-get update")
+
+                    tpr_pkgs = ' '.join(extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'name'))
+                    append_command_to_script(apt_script_file, "apt install {}".format(tpr_pkgs))
+
                 if deb_pkg_list['package_stats']['ppas'] > 0:
                     print("\n\nThe file contains list of the following {} packages from PPAs:".format(deb_pkg_list['package_stats']['ppas']))
                     print(apt_show_package_names_dict(deb_pkg_list['launchpad_ppa_packages']))
@@ -811,24 +829,6 @@ def apt_operations(operation='save'):
 
                     ppa_pkgs = ' '.join(extract_unique_elements(deb_pkg_list['launchpad_ppa_packages'], 'name'))
                     append_command_to_script(apt_script_file, "apt install {}".format(ppa_pkgs))
-
-                if deb_pkg_list['package_stats']['thirdparty'] > 0:
-                    print("\n\nThe file contains list of the following {} packages from third-party repositories:".format(deb_pkg_list['package_stats']['thirdparty']))
-                    print(apt_show_package_names_dict(deb_pkg_list['thirdparty_packages']))
-
-                    # adding command to installation script for third-party deb-repositories
-                    for tpk in extract_unique_elements(deb_pkg_list['thirdparty_keys'], 'key'):
-                        if tpk:
-                            append_command_to_script(apt_script_file, "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv {}".format(tpk['key']))
-
-                    for tpr in extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'repo'):
-                        if tpr:
-                            append_command_to_script(apt_script_file, "add-apt-repository '{}'".format(tpr))
-
-                    append_command_to_script(apt_script_file, "apt-get update")
-
-                    tpr_pkgs = ' '.join(extract_unique_elements(deb_pkg_list['thirdparty_packages'], 'name'))
-                    append_command_to_script(apt_script_file, "apt install {}".format(tpr_pkgs))
 
                 if deb_pkg_list['package_stats']['local'] > 0:
                     print("\n\nThe file contains list of the following {} locally installed packages:".format(deb_pkg_list['package_stats']['local']))
