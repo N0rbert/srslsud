@@ -727,7 +727,15 @@ def apt_operations(operation='save'):
             deb_pkg_list['thirdparty_packages'].append(tp_info)
 
             for k in apt_keys:
-                if not k['name'].startswith("Launchpad"):
+                if k['name'].startswith("Launchpad"):
+                    # print("\tkey: {}".format(k['name']))
+                    # TODO: add keys only for active PPAs
+
+                    ppak = dict()
+                    ppak['name'] = k['name']
+                    ppak['key'] = k
+                    deb_pkg_list['thirdparty_keys'].append(ppak)
+                else:
                     # print("\tkey: {}".format(k['name']))
 
                     e1 = k['name'] in p['name']
