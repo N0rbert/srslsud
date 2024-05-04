@@ -58,12 +58,21 @@ else:
     print("Warning: please install 'ubuntu-make' from deb- or snap-package for Ubuntu Make support!")
 
 if snap_ok:
+    snapd_gir_found = False
     try:
         gi.require_version('Snapd', '1')
         from gi.repository import Snapd
     except ValueError:
-        print("Error: please install 'gir1.2-snapd-1' deb-package for Snap support.")
-        sys.exit()
+        try:
+            gi.require_version('Snapd', '2')
+            from gi.repository import Snapd
+            snapd_gir_found = True
+        except ValueError:
+            print("Error: please install 'gir1.2-snapd-2' deb-package for Snap support.")
+            sys.exit()
+        if not snapd_gir_found:
+            print("Error: please install 'gir1.2-snapd-1' deb-package for Snap support.")
+            sys.exit()
 
 if flatpak_ok:
     try:
